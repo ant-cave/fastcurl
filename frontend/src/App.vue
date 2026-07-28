@@ -1,0 +1,39 @@
+<template>
+  <div class="min-h-screen bg-gray-50">
+    <!-- 顶栏 -->
+    <header class="bg-white border-b border-gray-200 px-6 py-3">
+      <div class="max-w-7xl mx-auto flex items-center gap-2">
+        <span class="text-lg font-mono font-bold text-gray-900">fastcurl</span>
+        <span class="text-xs text-gray-400">图形化 curl 工具</span>
+      </div>
+    </header>
+
+    <!-- 主内容 -->
+    <main class="max-w-7xl mx-auto p-6">
+      <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        <!-- 左侧：请求构建 -->
+        <div class="lg:col-span-3 space-y-4">
+          <RequestPanel />
+          <!-- curl 命令 -->
+          <CurlCommand :command="store.curlCommand" />
+        </div>
+
+        <!-- 右侧：响应 + 历史 -->
+        <div class="lg:col-span-2 space-y-4">
+          <ResponsePanel />
+          <HistoryPanel />
+        </div>
+      </div>
+    </main>
+  </div>
+</template>
+
+<script setup>
+import { useRequestStore } from './stores/request'
+import RequestPanel from './components/RequestPanel.vue'
+import ResponsePanel from './components/ResponsePanel.vue'
+import CurlCommand from './components/CurlCommand.vue'
+import HistoryPanel from './components/HistoryPanel.vue'
+
+const store = useRequestStore()
+</script>
