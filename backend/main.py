@@ -11,7 +11,12 @@ import httpx
 import time
 import os
 
-SESSION_SECRET = os.getenv("FASTCURL_SESSION_SECRET", os.urandom(64).hex())
+from dotenv import load_dotenv
+load_dotenv()
+
+SESSION_SECRET = os.getenv("SESSION_SECRET") or os.getenv("FASTCURL_SESSION_SECRET")
+if not SESSION_SECRET:
+    raise RuntimeError("需要设置 SESSION_SECRET 环境变量")
 
 app = FastAPI(title="fastcurl API")
 

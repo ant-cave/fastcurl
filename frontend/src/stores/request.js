@@ -56,6 +56,7 @@ const LLM_PRESETS = [
 ]
 
 const DEV = typeof location !== 'undefined' && (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+const API_BASE = DEV ? '' : 'https://backend.api.011420.xyz'
 const AUTH_BASE = DEV ? '/api/auth' : 'https://backend.api.011420.xyz/api/auth'
 
 export const useRequestStore = defineStore('request', () => {
@@ -222,7 +223,7 @@ export const useRequestStore = defineStore('request', () => {
         const payload = { url: url.value, method: method.value, headers: { ...hdrs }, body_type: bodyType.value }
         if (bodyType.value === 'json') payload.body = JSON.parse(JSON.stringify(bodyJson.value))
         else if (bodyType.value === 'form') payload.body = Object.fromEntries(bodyForm.value.map(f => [f.key, f.value]))
-        const proxyResp = await fetch('/api/proxy', {
+        const proxyResp = await fetch(`${API_BASE}/api/proxy`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
