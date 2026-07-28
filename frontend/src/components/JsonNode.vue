@@ -1,5 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
-<!-- Copyright (C) 2026 ant-cave -->
+<!-- Copyright (C) 2026 ant-cave <antmmmmm@outlook.com> -->
+<!-- https://github.com/ant-cave -->
 
 <template>
   <div class="select-none">
