@@ -55,7 +55,68 @@ const LLM_PRESETS = [
   }
 ]
 
+const DEV = typeof location !== 'undefined' && (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+const AUTH_BASE = DEV ? '/api/auth' : 'https://backend.api.011420.xyz/api/auth'
+
 export const useRequestStore = defineStore('request', () => {
+  // 认证
+  const user = ref(null)
+  const authLoading = ref(true)
+
+  async function checkAuth() {
+    try {
+      const res = await fetch(`${AUTH_BASE}/me`, { credentials: 'include' })
+      if (res.ok) {
+        const data = await res.json()
+        user.value = data.authenticated ? data : null
+      } else {
+        user.value = null
+      }
+    } catch {
+      user.value = null
+    } finally {
+      authLoading.value = false
+    }
+  }
+
+  async function login() {
+    try {
+      const redirect = encodeURIComponent('/fastcurl/')
+      const res = await fetch(`${AUTH_BASE}/login?redirect=${redirect}`, { credentials: 'include' })
+      if (!res.ok) throw new Error('Login failed')
+      const data = await res.json()
+      if (data.authorize_url) {
+        sessionStorage.setItem('pkce_code_verifier', data.code_verifier)
+        sessionStorage.setItem('pkce_state', data.state)
+        window.location.href = data.authorize_url
+      }
+    } catch (e) {
+      console.error('Login error:', e)
+    }
+  }
+
+  async function handleCallback(code, codeVerifier) {
+    const state = sessionStorage.getItem('pkce_state') || ''
+    sessionStorage.removeItem('pkce_state')
+    const res = await fetch(`${AUTH_BASE}/token`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code, code_verifier: codeVerifier, state }),
+    })
+    if (!res.ok) throw new Error('Token exchange failed')
+    const data = await res.json()
+    user.value = { authenticated: true }
+    return data
+  }
+
+  async function logout() {
+    try {
+      await fetch(`${AUTH_BASE}/logout`, { method: 'POST', credentials: 'include' })
+    } catch { /* ignore */ }
+    user.value = null
+  }
+
   // 请求参数
   const url = ref('')
   const method = ref('GET')
@@ -222,6 +283,7 @@ export const useRequestStore = defineStore('request', () => {
     bodyType, bodyJson, bodyForm, bodyJsonRaw,
     response, loading, history, favorites,
     snapshot, curlCommand, LLM_PRESETS,
-    applyPreset, send, loadFromHistory, toggleFavorite, clearHistory, getEffectiveHeaders
+    applyPreset, send, loadFromHistory, toggleFavorite, clearHistory, getEffectiveHeaders,
+    user, authLoading, checkAuth, login, handleCallback, logout
   }
 })

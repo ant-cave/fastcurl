@@ -80,10 +80,17 @@
       </div>
     </div>
 
+    <!-- 服务端模式未登录提示 -->
+    <div v-if="store.mode === 'server' && !store.user && !store.authLoading"
+      class="border border-dashed border-gray-300 rounded p-4 text-center text-xs text-gray-400"
+    >
+      服务端模式需要登录，<button class="text-gray-700 underline" @click="store.login()">点击登录</button>
+    </div>
+
     <!-- 发送按钮 -->
     <button
       class="w-full py-2 rounded text-sm font-medium bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
-      :disabled="!store.url || store.loading"
+      :disabled="!store.url || store.loading || (store.mode === 'server' && !store.user)"
       @click="store.send()"
     >
       {{ store.loading ? '发送中...' : '发送请求' }}

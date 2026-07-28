@@ -2,14 +2,21 @@
 # Copyright (C) 2026 ant-cave <antmmmmm@outlook.com>
 # https://github.com/ant-cave
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from pydantic import BaseModel
 from typing import Optional, Any
 import httpx
 import time
+import os
+
+SESSION_SECRET = os.getenv("FASTCURL_SESSION_SECRET", os.urandom(64).hex())
 
 app = FastAPI(title="fastcurl API")
+
+from starlette.middleware.sessions import SessionMiddleware
+app.add_middleware(SessionMiddleware, secret_key=SESSION_SECRET, max_age=86400, same_site="none", https_only=True)
 
 app.add_middleware(
     CORSMiddleware,
@@ -27,7 +34,11 @@ class ProxyRequest(BaseModel):
     body_type: str = "json"
 
 @app.post("/api/proxy")
-async def proxy(req: ProxyRequest):
+async def proxy(req: ProxyRequest, request: Request):
+    user_sub = request.session.get("user_sub")
+    if not user_sub:
+        raise HTTPException(status_code=401, detail="请先登录")
+
     start = time.time()
     async with httpx.AsyncClient(timeout=60.0, follow_redirects=True) as client:
         kwargs = {

@@ -10,8 +10,14 @@
         <a href="https://me.011420.xyz" class="text-gray-400 hover:text-gray-700 text-lg leading-none mr-1">&larr;</a>
         <span class="text-lg font-mono font-bold text-gray-900">fastcurl</span>
         <span class="text-xs text-gray-400">图形化 curl 工具</span>
+        <div class="ml-auto">
+          <LoginButton />
+        </div>
       </div>
     </header>
+
+    <!-- OAuth 回调处理 -->
+    <OAuthCallbackHandler />
 
     <!-- 主内容 -->
     <main class="max-w-7xl mx-auto p-6">
@@ -19,7 +25,6 @@
         <!-- 左侧：请求构建 -->
         <div class="lg:col-span-3 space-y-4">
           <RequestPanel />
-          <!-- curl 命令 -->
           <CurlCommand :command="store.curlCommand" />
         </div>
 
@@ -34,11 +39,18 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue'
 import { useRequestStore } from './stores/request'
 import RequestPanel from './components/RequestPanel.vue'
 import ResponsePanel from './components/ResponsePanel.vue'
 import CurlCommand from './components/CurlCommand.vue'
 import HistoryPanel from './components/HistoryPanel.vue'
+import LoginButton from './components/LoginButton.vue'
+import OAuthCallbackHandler from './components/OAuthCallbackHandler.vue'
 
 const store = useRequestStore()
+
+onMounted(() => {
+  store.checkAuth()
+})
 </script>
