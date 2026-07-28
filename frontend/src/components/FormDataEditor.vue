@@ -1,3 +1,6 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!-- Copyright (C) 2026 ant-cave -->
+
 <template>
   <div>
     <div class="flex items-center justify-between mb-2">

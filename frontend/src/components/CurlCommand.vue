@@ -1,3 +1,6 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!-- Copyright (C) 2026 ant-cave -->
+
 <template>
   <div v-if="command" class="border border-gray-200 rounded bg-gray-50">
     <div class="flex items-center justify-between px-3 py-1.5 border-b border-gray-200">

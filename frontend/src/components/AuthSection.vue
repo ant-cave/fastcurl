@@ -1,3 +1,6 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!-- Copyright (C) 2026 ant-cave -->
+
 <template>
   <div class="border border-gray-200 rounded bg-white p-3">
     <div class="text-xs text-gray-500 mb-2">认证方式</div>

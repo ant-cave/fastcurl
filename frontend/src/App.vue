@@ -1,8 +1,12 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!-- Copyright (C) 2026 ant-cave -->
+
 <template>
   <div class="min-h-screen bg-gray-50">
     <!-- 顶栏 -->
     <header class="bg-white border-b border-gray-200 px-6 py-3">
       <div class="max-w-7xl mx-auto flex items-center gap-2">
+        <a href="https://me.011420.xyz" class="text-gray-400 hover:text-gray-700 text-lg leading-none mr-1">&larr;</a>
         <span class="text-lg font-mono font-bold text-gray-900">fastcurl</span>
         <span class="text-xs text-gray-400">图形化 curl 工具</span>
       </div>
