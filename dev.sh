@@ -32,3 +32,4 @@ echo "  按 Ctrl+C 停止"
 echo ""
 
 wait
+
